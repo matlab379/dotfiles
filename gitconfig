@@ -1,0 +1,60 @@
+[init]
+  templatedir = ~/.git_template
+[push]
+  default = current
+[color]
+  ui = auto
+[alias]
+  aa = add --all
+  ci = commit -v
+  lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+  br = branch
+  st = status
+  unstage = reset HEAD
+  last = log -1
+
+  # Commit all changes
+  ca = !git add -A && git commit -av
+
+  # Add all changes to last commit
+  caa = !git add -A && git commit --amend -av
+
+  # Switch to a branch, creating it if necessary
+  co = "!f() { git checkout -b \"$1\" 2> /dev/null || git checkout \"$1\"; }; f"
+
+  # Rename local branch
+  rn = "!f() { git branch -m $1; }; f"
+
+  # Sync origin with remote named github
+  gg = "!f() { old=$(git current-branch) && git checkout master && git pull origin master && git push github master && git checkout $old; }; f"
+
+  # Grab latest from origin, sync with github branch, and rebase changes from current branch on top
+  ggr = "!f() { old=$(git current-branch) && git checkout master && git pull origin master && git push github master && git checkout $old && git rebase master; }; f"
+
+  # Show the diff between the latest commit and the current state
+  d = !"git diff-index --quiet HEAD -- || clear; git --no-pager diff --patch-with-stat"
+
+  current-branch = !sh -c 'git rev-parse --abbrev-ref HEAD' -
+  delete-branch = !sh -c 'git push origin :refs/heads/$1 && git branch -D $1' -
+[core]
+  excludesfile = ~/.gitignore
+  autocrlf = input
+[commit]
+  template = ~/.gitmessage
+[fetch]
+  prune = true
+[include]
+  path = ~/.gitconfig.local
+[filter "hawser"]
+  clean = git hawser clean %f
+  smudge = git hawser smudge %f
+  required = true
+[user]
+	name = godson
+	email = matlab379@foxmail.com
+[filter "lfs"]
+  clean = git lfs clean %f
+  smudge = git lfs smudge %f
+  required = true
+[github]
+  user = matlab379
